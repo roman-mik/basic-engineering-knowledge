@@ -3,66 +3,87 @@ package task1;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+
 public class Task {
 
-  public static String getUserInput() {
-    Scanner sc = new Scanner(System.in);
 
-    System.out.println("Please enter any string:");
+    /**
+     * Complexity: O(1)
+     */
+    public static String getUserInput() {
+        Scanner sc = new Scanner(System.in);
 
-    String input = sc.nextLine();
-    sc.close();
+        System.out.println("Please enter any string:");
 
-    return input;
-  }
+        String input = sc.nextLine();
+        sc.close();
 
-  public static ArrayList<String> getSubstrings(String userInput) {
-    ArrayList<String> subStrings = new ArrayList<String>();
-    StringBuilder sBuilder = new StringBuilder();
-
-    for (int i = 0; i < userInput.length(); i++) {
-      if (isBigger(userInput, i)) {
-        sBuilder.append(userInput.charAt(i));
-      } else {
-        subStrings.add(new String(sBuilder));
-        sBuilder.delete(0, sBuilder.length());
-      }
+        return input;
     }
 
-    return subStrings;
-  }
+    /**
+     * Complexity: O(N*N)
+     */
+    public static ArrayList<String> getSubstrings(String userInput) {
+        ArrayList<String> subStrings = new ArrayList<>();
+        StringBuilder sBuilder = new StringBuilder();
 
-  public static boolean isBigger(String userInput, int index) {
-    if (index == 0) {
-      return true;
-    } 
-    else {
-      return userInput.charAt(index) > userInput.charAt(index - 1);
+        for (int i = 0; i < userInput.length(); i++) { // O(N)
+            if (!isBigger(userInput, i)) {
+                subStrings.add(new String(sBuilder)); // O(1)
+                sBuilder.delete(0, sBuilder.length()); // O(N)
+            }
+            sBuilder.append(userInput.charAt(i)); // O(1)
+
+            if (i == userInput.length() - 1) {
+                subStrings.add(new String(sBuilder)); // O(1)
+            }
+        }
+
+        return subStrings;
     }
-  }
 
-  public static String getLongestSubstring(ArrayList<String> subStings) {
-    int firstString = subStings.get(0).length();
-    int index = 0;
-
-    for (int i = 0; i < subStings.size(); i++) {
-      if (subStings.get(i).length() > firstString) {
-        firstString = subStings.get(i).length();
-        index = i;
-      }
+    /**
+     * Complexity: O(1)
+     */
+    public static boolean isBigger(String userInput, int index) {
+        if (index == 0) {
+            return true;
+        } else {
+            return userInput.charAt(index) > userInput.charAt(index - 1);
+        }
     }
 
-    return subStings.get(index);
-  }
+    /**
+     * Complexity: O(N)
+     */
+    public static String getLongestSubstring(ArrayList<String> subStings) {
+        int maxLength = 0;
+        String longestString = null;
 
-  public static void showOutput(String subString) {
-    System.out.println(subString.length());
-  }
+        for (String s : subStings) {
+            if (s.length() > maxLength) {
+                maxLength = s.length();
+                longestString = s;
+            }
+        }
+        return longestString;
+    }
 
-  public static void main(String[] args) {
-    String userInput = getUserInput();
-    ArrayList<String> subStrings = getSubstrings(userInput);
-    String longestSubString = getLongestSubstring(subStrings);
-    showOutput(longestSubString);
-  }
+    /**
+     * Complexity: O(1)
+     */
+    public static void showOutput(String subString) {
+        System.out.println("Longest substring length: " + subString.length());
+    }
+
+    /**
+     *  Summary complexity: O(1) + O(N*N) + O(N) + O(1) = O(2N*N) = O(N*N)
+     */
+    public static void main(String[] args) {
+        String userInput = getUserInput();
+        ArrayList<String> subStrings = getSubstrings(userInput);
+        String longestSubString = getLongestSubstring(subStrings);
+        showOutput(longestSubString);
+    }
 }
